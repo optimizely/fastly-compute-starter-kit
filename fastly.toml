@@ -1,0 +1,18 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = ["zeeshan.ashraf@optimizely.com"]
+description = "A basic starter kit fastly with optimizely built in"
+language = "javascript"
+manifest_version = 2
+name = "optimizely starter kit"
+
+[setup.backends]
+  
+  [setup.backends.optlycdn]
+  address = "cdn.optimizely.com"
+  port = 443
+
+  [setup.backends.optlylogx]
+  address = "logx.optimizely.com"
+  port = 443
