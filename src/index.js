@@ -1,3 +1,18 @@
+/**
+ *    Copyright 2021, Optimizely and contributors
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 import { createInstance, enums as OptimizelyEnums } from '@optimizely/optimizely-sdk/dist/optimizely.lite.es';
 import { getDatafile, dispatchEvent } from './optimizely_helper';
 
@@ -15,13 +30,14 @@ async function handleRequest(event) {
     logLevel: OptimizelyEnums.LOG_LEVEL.ERROR,
 
     /***
-     * Optional event dispatcher. Please uncomment this line if you want to dispatch impression event to optimizely logx backend.
-     * When enabled, event is dispatched asynchronously. It does not impact the response time for a particular worker but it will
+     * Optional event dispatcher. Please uncomment the following line if you want to dispatch N impression event to optimizely logx backend.
+     * When enabled, an event is dispatched asynchronously. It does not impact the response time for a particular worker but it will
      * add to the total compute time of the worker and can impact fastly billing.
     */
+
     // eventDispatcher: { dispatchEvent }
 
-    /* Add other Optimizely SDK initialization options here if needed*/
+    /* Add other Optimizely SDK initialization options here if needed */
   });
 
   const optimizelyUserContext = optimizelyClient.createUserContext('USER_ID_HERE', {/* YOUR_OPTIONAL_ATTRIBUTES_HERE */});  
