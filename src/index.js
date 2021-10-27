@@ -30,7 +30,7 @@ async function handleRequest(event) {
     logLevel: OptimizelyEnums.LOG_LEVEL.ERROR,
 
     /***
-     * Optional event dispatcher. Please uncomment the following line if you want to dispatch N impression event to optimizely logx backend.
+     * Optional event dispatcher. Please uncomment the following line if you want to dispatch an impression event to optimizely logx backend.
      * When enabled, an event is dispatched asynchronously. It does not impact the response time for a particular worker but it will
      * add to the total compute time of the worker and can impact fastly billing.
     */
