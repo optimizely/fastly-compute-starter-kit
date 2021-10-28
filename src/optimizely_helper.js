@@ -1,16 +1,20 @@
-const BACKEND_CDN = 'optlycdn';
-const BACKEND_LOGX = 'optlylogx';
+const BACKEND_CDN = "optlycdn";
+const BACKEND_LOGX = "optlylogx";
 
 export async function getDatafile(sdkKey, ttl) {
-  const dataFileRequest = new Request(`https://cdn.optimizely.com/datafiles/${sdkKey}.json`);
-  const cacheOverride = new CacheOverride('override', { ttl });
-  const fetchedDatafile = await fetch(
-    dataFileRequest,
-    {
-      backend: BACKEND_CDN,
-      cacheOverride
-    }
+  const dataFileRequest = new Request(
+    `https://cdn.optimizely.com/datafiles/${sdkKey}.json`
   );
+  
+  const cacheOverride = new CacheOverride("override", {
+    ttl: ttl,
+    swr: 60,
+  });
+
+  const fetchedDatafile = await fetch(dataFileRequest, {
+    backend: BACKEND_CDN,
+    cacheOverride,
+  });
   return await fetchedDatafile.text();
 }
 
@@ -23,4 +27,4 @@ export function dispatchEvent({ url, params }) {
     headers,
   });
   fetch(eventRequest, { backend: BACKEND_LOGX });
-};
+}
