@@ -10,10 +10,12 @@ name = "optimizely starter kit"
 [setup.backends]
   
   [setup.backends.optlycdn]
-    url = "https://cdn.optimizely.com"
+    address = "cdn.optimizely.com"
+    port = 443
 
   [setup.backends.optlylogx]
-    url = "https://logx.optimizely.com"
+    address = "logx.optimizely.com"
+    port = 443
 
 [local_server.backends]
 
