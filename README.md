@@ -21,5 +21,5 @@ Optimizely starter kit for Fastly's Compute@Edge. This template provides a JavaS
     
 6. To monitor logs:
     ```sh
-    fastly logs tail
+    fastly log-tail
     ```
