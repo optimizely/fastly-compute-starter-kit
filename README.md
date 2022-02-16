@@ -23,3 +23,7 @@ Optimizely starter kit for Fastly's Compute@Edge. This template provides a JavaS
     ```sh
     fastly log-tail
     ```
+
+### Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md).
