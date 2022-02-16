@@ -2,10 +2,10 @@
 # https://developer.fastly.com/reference/fastly-toml/
 
 authors = ["zeeshan.ashraf@optimizely.com"]
-description = "A basic starter kit fastly with optimizely built in"
+description = "A basic starter kit for Fastly's Compute@Edge with Optimizely built in."
 language = "javascript"
 manifest_version = 2
-name = "optimizely starter kit"
+name = "optimizely"
 
 [setup.backends]
   
