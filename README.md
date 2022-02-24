@@ -6,7 +6,13 @@ You can deploy code behind feature flags, experiment with A/B tests, and roll ou
 
 
 # Optimizely Starter Kit
-Optimizely starter kit for Fastly's Compute@Edge. This template provides a JavaScript package . 
+The Optimizely starter kit for Fastly's Compute@Edge embeds and extends our [Javascript SDK](https://docs.developers.optimizely.com/full-stack/v4.0/docs/javascript-node) to provide a starting point for you to implement experimentation and feature flagging for your experiences at the edge. For a guide to getting started with our platform more generally, this can be combined with the steps outlined in our [Javascript Quickstart here](https://docs.developers.optimizely.com/full-stack/v4.0/docs/javascript-node). 
+
+### External Calls via Fastly Backends
+This starter kit overrides the standard Optimizely Javascript SDK's external calls to use Compute@Edge's fetch against registered backend endpoints. This backend setup also provides performant caching for the [Optimizely Datafile](https://docs.developers.optimizely.com/full-stack/v4.0/docs/manage-config-datafile). 
+
+### Identity Management
+Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This starter kit does not implement a persistent user identifier. Common approaches would include reading a unique visitor ID from a cookie-based header, or other existing unique identifier available within your application. 
 
 ## How to use
 
