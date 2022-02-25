@@ -14,6 +14,9 @@ This starter kit overrides the standard Optimizely Javascript SDK's external cal
 ### Identity Management
 Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This starter kit does not implement a persistent user identifier. Common approaches would include reading a unique visitor ID from a cookie-based header, or other existing unique identifier available within your application. 
 
+### Bucketing
+For more information on how Optimizely Full Stack SDKs bucket visitors, see [here](https://docs.developers.optimizely.com/full-stack/v4.0/docs/how-bucketing-works) 
+
 ## How to use
 
 1. Create a new folder and initialize a Fastly Compute@Edge service using the [fastly cli](https://developer.fastly.com/reference/cli/) from this template.
