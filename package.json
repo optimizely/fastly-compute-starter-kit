@@ -1,6 +1,6 @@
 {
   "name": "optimizely-starter-kit-for-fastly-compute",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "This is an optimizely starter kit for fastly edge workers",
   "main": "src/index.js",
   "scripts": {
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@fastly/js-compute": "^0.2.0",
-    "@optimizely/optimizely-sdk": "^4.8.0-beta.2"
+    "@optimizely/optimizely-sdk": "^4.9.1",
+    "cookie": "^0.4.2"
   }
 }
