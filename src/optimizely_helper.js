@@ -44,11 +44,3 @@ export function dispatchEvent({ url, params }) {
   });
   fetch(eventRequest, { backend: BACKEND_LOGX });
 }
-
-/** 
- * Generates a random 6 digit user id for demo purpose. For production uses, please use user Ids from your system
- * or autogenerate a uuid.
- */
-export function generateRandomUserId() {
-  return `${Math.floor(Math.random() * 899999 + 100000)}`;
-}

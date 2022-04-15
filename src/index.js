@@ -15,6 +15,7 @@
  */
 
 import cookie from "cookie";
+import { v4 } from "uuid";
 import {
   createInstance,
   enums as OptimizelyEnums,
@@ -22,7 +23,6 @@ import {
 import {
   getDatafile,
   dispatchEvent,
-  generateRandomUserId,
 } from "./optimizely_helper";
 
 const FASTLY_CLIENT_ENGINE = "javascript-sdk/fastly";
@@ -34,7 +34,7 @@ async function handleRequest(event) {
   const cookies = cookie.parse(event.request.headers.get("Cookie") || '');
 
   // Fetch user Id from the cookie if available to make sure that a returning user from same browser session always sees the same variation.
-  const userId = cookies[OPTIMIZELY_USER_ID_COOKIE_NAME] || generateRandomUserId();
+  const userId = cookies[OPTIMIZELY_USER_ID_COOKIE_NAME] || v4();
 
   // fetch datafile from optimizely CDN and cache it with fastly for the given number of seconds
   const datafile = await getDatafile("YOUR_SDK_KEY_HERE", 600);
