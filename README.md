@@ -12,7 +12,7 @@ The Optimizely starter kit for Fastly's Compute@Edge embeds and extends our [Jav
 This starter kit overrides the standard Optimizely Javascript SDK's external calls to use Compute@Edge's fetch against registered backend endpoints. This backend setup also provides performant caching for the [Optimizely Datafile](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/manage-config-datafile). 
 
 ### Identity Management
-Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This starter kit does not implement a persistent user identifier. Common approaches would include reading a unique visitor ID from a cookie-based header, or other existing unique identifier available within your application. 
+Out of the box, Optimizely's Full Stack SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This example generates a unique id, stores it in a cookie and reuses it to make the decisions sticky. Another common approach would be to use an existing unique identifier available within your application.
 
 ### Bucketing
 For more information on how Optimizely Full Stack SDKs bucket visitors, see [here](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/how-bucketing-works). 
