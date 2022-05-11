@@ -42,4 +42,4 @@ For more information on how Optimizely Full Stack SDKs bucket visitors, see [her
 
 ### Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md).
+Please see [CONTRIBUTING](https://github.com/optimizely/fastly-compute-starter-kit/blob/main/CONTRIBUTING.md).
