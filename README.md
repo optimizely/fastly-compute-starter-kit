@@ -26,10 +26,10 @@ For more information on how Optimizely Full Stack SDKs assign users to feature f
 ## How to use
 
 ### Prerequisites
-In order to use this starter kit, you should have:
+You will need to complete the following prerequisites to use this template:
 
-   - A Compute@Edge account and Fastly CLI installed. For more information view the Compute@Edge getting started[documentation](https://developer.fastly.com/learning/compute/).
-   - An Optimizely account. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
+   - Have a Compute@Edge account and the Fastly CLI installed. For more information view the Compute@Edge getting started[documentation](https://developer.fastly.com/learning/compute/).
+   - Have an Optimizely account. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
 
 
 ### Get started
@@ -40,16 +40,16 @@ In order to use this starter kit, you should have:
 
 2. Follow the wizard and provide the service name, description and any other information.
 
-3. If you want to use an existing Fastly service, add your `service_id` to `fastly.toml`.
+3. Add your `service_id` to `fastly.toml`, if you want to use an existing Fastly service.
 
 4. Update your Optimizely `sdkKey` and `flagKey` in `src/index.js`. Your SDK keys can be found in the Optimizely application under **Settings**.
 
-5. To build and publish:
+5. Build and publish:
     ```sh
     fastly compute publish
     ```
     
-6. To monitor logs:
+6. Monitor logs:
     ```sh
     fastly log-tail
     ```
