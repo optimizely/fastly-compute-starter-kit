@@ -17,7 +17,7 @@ Note: Please don't change the `package.json` or `VERSION`. We'll take care of bu
 
 ## License
 
-All contributions are under the CLA mentioned above. For this project, Optimizely uses the Apache 2.0 license, and so asks that by contributing your code, you agree to license your contribution under the terms of the [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0). Your contributions should also include the following header:
+All contributions are under the CLA mentioned above. For this project, Optimizely uses the Apache 2.0 license, and so asks that by contributing your code, you agree to license your contribution under the terms of the [Apache License v2.0](https://www.apache.org/licenses/LICENSE-2.0). Your contributions should also include the following header:
 
 ```
 /****************************************************************************
@@ -27,7 +27,7 @@ All contributions are under the CLA mentioned above. For this project, Optimizel
  * you may not use this file except in compliance with the License.         *
  * You may obtain a copy of the License at                                  *
  *                                                                          *
- *    http://www.apache.org/licenses/LICENSE-2.0                            *
+ *    https://www.apache.org/licenses/LICENSE-2.0                            *
  *                                                                          *
  * Unless required by applicable law or agreed to in writing, software      *
  * distributed under the License is distributed on an "AS IS" BASIS,        *
