@@ -28,28 +28,27 @@ For more information on how Optimizely Full Stack SDKs assign users to feature f
 ### Prerequisites
 You will need to complete the following prerequisites to use this template:
 
-   - Have a Compute@Edge account and the Fastly CLI installed. For more information view the Compute@Edge getting started[documentation](https://developer.fastly.com/learning/compute/).
+   - Have a Compute@Edge account and the Fastly CLI installed. For more information view the Compute@Edge getting started [documentation](https://developer.fastly.com/learning/compute/).
    - Have an Optimizely account. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
 
 
 ### Get started
-1. Create a new folder and initialize a Fastly Compute@Edge service using the [fastly cli](https://developer.fastly.com/reference/cli/) from this template.
+1. Create a new folder and initialize a Fastly Compute@Edge service using the [Fastly CLI](https://developer.fastly.com/reference/cli/) from this template.
     ```sh
     fastly compute init --from https://github.com/optimizely/fastly-compute-starter-kit
     ```
 
 2. Follow the wizard and provide the service name, description and any other information.
+   a) Add your `service_id` to `fastly.toml`, if you want to use an existing Fastly service.
 
-3. Add your `service_id` to `fastly.toml`, if you want to use an existing Fastly service.
+3. Update your Optimizely `sdkKey` and `flagKey` in `src/index.js`. Your SDK keys can be found in the Optimizely application under **Settings**.
 
-4. Update your Optimizely `sdkKey` and `flagKey` in `src/index.js`. Your SDK keys can be found in the Optimizely application under **Settings**.
-
-5. Build and publish:
+4. Build and publish:
     ```sh
     fastly compute publish
     ```
     
-6. Monitor logs:
+5. Monitor logs:
     ```sh
     fastly log-tail
     ```
@@ -59,6 +58,5 @@ Please see [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Additional resources
 - [Fastly - Compute@Edge official documentation](https://docs.fastly.com/products/compute-at-edge)
-- [WebAssembly - Wasm](https://webassembly.org/)
 - [Compute@Edge application code in JavaScript](https://docs.fastly.com/products/compute-at-edge)
 - [Fastly Compute@Edge with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly)
