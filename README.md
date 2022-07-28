@@ -59,4 +59,4 @@ Please see [CONTRIBUTING](CONTRIBUTING.md).
 ## Additional resources
 - [Fastly - Compute@Edge official documentation](https://docs.fastly.com/products/compute-at-edge)
 - [Compute@Edge application code in JavaScript](https://docs.fastly.com/products/compute-at-edge)
-- [Fastly Compute@Edge with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly)
+- [Fastly Compute@Edge with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly-compute-at-edge)
