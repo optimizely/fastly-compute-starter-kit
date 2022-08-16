@@ -54,7 +54,7 @@ You will need to complete the following prerequisites to use this template:
     ```
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md).
+Please see [CONTRIBUTING](https://github.com/optimizely/fastly-compute-starter-kit/blob/main/CONTRIBUTING.md).
 
 ## Additional resources
 - [Fastly - Compute@Edge official documentation](https://docs.fastly.com/products/compute-at-edge)
