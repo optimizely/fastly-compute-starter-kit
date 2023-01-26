@@ -6,21 +6,29 @@ description = "A basic starter kit for Fastly's Compute@Edge with Optimizely bui
 language = "javascript"
 manifest_version = 2
 name = "Optimizely Full Stack"
+service_id = ""
 
-[setup.backends]
-  
-  [setup.backends.optlycdn]
-    address = "cdn.optimizely.com"
-    port = 443
+[local_server]
 
-  [setup.backends.optlylogx]
-    address = "logx.optimizely.com"
-    port = 443
-
-[local_server.backends]
+  [local_server.backends]
 
     [local_server.backends.optlycdn]
       url = "https://cdn.optimizely.com"
-    
+
     [local_server.backends.optlylogx]
       url = "https://logx.optimizely.com"
+
+[scripts]
+  build = "npm exec js-compute-runtime ./src/index.js ./bin/main.wasm"
+
+[setup]
+
+  [setup.backends]
+
+    [setup.backends.optlycdn]
+      address = "cdn.optimizely.com"
+      port = 443
+
+    [setup.backends.optlylogx]
+      address = "logx.optimizely.com"
+      port = 443
