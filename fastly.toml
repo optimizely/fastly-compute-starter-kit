@@ -6,7 +6,6 @@ description = "A basic starter kit for Fastly's Compute@Edge with Optimizely bui
 language = "javascript"
 manifest_version = 2
 name = "Optimizely Full Stack"
-service_id = ""
 
 [local_server]
 
@@ -17,9 +16,6 @@ service_id = ""
 
     [local_server.backends.optlylogx]
       url = "https://logx.optimizely.com"
-
-[scripts]
-  build = "npm exec js-compute-runtime ./src/index.js ./bin/main.wasm"
 
 [setup]
 
