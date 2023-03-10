@@ -8,7 +8,7 @@ Optimizely Rollouts is [free feature flags](https://www.optimizely.com/free-feat
 
 ## Get Started
 
-Refer to the [Optimizely Akamai EdgeWorkers Starter Kit documentation page](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers) for detailed instructions about using this starter kit.
+Refer to the [Optimizely Akamai EdgeWorkers Starter Kit documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers) for detailed instructions about using this starter kit.
 
 ### Prerequisites
 
@@ -82,7 +82,9 @@ For more information about Fastly Compute@Edge, you may visit the following reso
 - [Compute@Edge application code in JavaScript](https://docs.fastly.com/products/compute-at-edge)
 - [Fastly Compute@Edge with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly-compute-at-edge)
 
-## Contributing
+## SDK Development
+
+### Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md).
 
@@ -119,7 +121,5 @@ Please see [CONTRIBUTING](CONTRIBUTING.md).
 - AWS Lambda@Edge - https://github.com/optimizely/aws-lambda-at-edge-starter-kit
 
 - Cloudflare Workers - https://github.com/optimizely/cloudflare-worker-template
-
-- Fastly Compute@Edge - https://github.com/optimizely/fastly-compute-starter-kit
 
 - Vercel Functions - https://github.com/optimizely/vercel-examples/tree/main/edge-functions/feature-flag-optimizely
