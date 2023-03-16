@@ -1,6 +1,6 @@
-# Optimizely Akamai Edgeworkers Starter Kit
+# Optimizely Fastly Compute@Edge Starter Kit
 
-This repository houses the Akamai Edgeworkers Starter Kit which provides a quickstart for users who would like to use Optimizely Feature Experimentation and Optimizely Full Stack (legacy) with Akamai Edgeworkers.
+This repository houses the Fastly Compute@Edge Starter Kit which provides a quickstart for users who would like to use Optimizely Feature Experimentation and Optimizely Full Stack (legacy) with Fastly Compute@Edge.
 
 Optimizely Feature Experimentation is an A/B testing and feature management tool for product development teams that enables you to experiment at every step. Using Optimizely Feature Experimentation allows for every feature on your roadmap to be an opportunity to discover hidden insights. Learn more at [Optimizely.com](https://www.optimizely.com/products/experiment/feature-experimentation/), or see the [developer documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/welcome).
 
@@ -8,7 +8,7 @@ Optimizely Rollouts is [free feature flags](https://www.optimizely.com/free-feat
 
 ## Get Started
 
-Refer to the [Optimizely Akamai EdgeWorkers Starter Kit documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/akamai-edgeworkers) for detailed instructions about using this starter kit.
+Refer to the [Optimizely Fastly Compute@Edge Starter Kit documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly-compute-at-edge) for detailed instructions about using this starter kit.
 
 ### Prerequisites
 
