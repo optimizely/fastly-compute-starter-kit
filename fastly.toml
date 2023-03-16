@@ -7,20 +7,24 @@ language = "javascript"
 manifest_version = 2
 name = "Optimizely Feature Experimentation, Optimizely Full Stack (legacy), and Optimizely Rollouts"
 
-[setup.backends]
-  
-  [setup.backends.optlycdn]
-    address = "cdn.optimizely.com"
-    port = 443
+[local_server]
 
-  [setup.backends.optlylogx]
-    address = "logx.optimizely.com"
-    port = 443
-
-[local_server.backends]
+  [local_server.backends]
 
     [local_server.backends.optlycdn]
       url = "https://cdn.optimizely.com"
-    
+
     [local_server.backends.optlylogx]
       url = "https://logx.optimizely.com"
+
+[setup]
+
+  [setup.backends]
+
+    [setup.backends.optlycdn]
+      address = "cdn.optimizely.com"
+      port = 443
+
+    [setup.backends.optlylogx]
+      address = "logx.optimizely.com"
+      port = 443
