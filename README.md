@@ -49,7 +49,7 @@ Refer to the [Optimizely Fastly Compute@Edge Starter Kit documentation](https://
 ### Prerequisites
 
 **System Requirements:**
-- Node.js 18.x or higher (20.x or 22.x recommended)
+- Node.js 22.x or higher (required by the dev toolchain, e.g. `cookie` v2 and Vitest 4)
 - npm 9.x or higher
 
 **Accounts & Tools:**

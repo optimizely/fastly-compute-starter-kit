@@ -124,7 +124,11 @@ function buildResponse(body, userId) {
 	headers.set("Content-Type", "text/plain");
 	headers.set(
 		"Set-Cookie",
-		stringifySetCookie({ name: OPTIMIZELY_USER_ID_COOKIE_NAME, value: userId }),
+		stringifySetCookie({
+			name: OPTIMIZELY_USER_ID_COOKIE_NAME,
+			value: userId,
+			path: "/",
+		}),
 	);
 	return new Response(body, { status: 200, headers });
 }

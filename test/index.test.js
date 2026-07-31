@@ -154,6 +154,7 @@ describe("index.js - Fastly Compute", () => {
 		expect(cookie.stringifySetCookie).toHaveBeenCalledWith({
 			name: "optimizely_user_id",
 			value: "test-uuid-123",
+			path: "/",
 		});
 		expect(response.headers.get("Set-Cookie")).toBe(
 			"optimizely_user_id=test-uuid-123",

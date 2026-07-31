@@ -66,7 +66,7 @@ export class FastlyRequestHandler {
 			requestOptions.cacheOverride = this.cacheOverride;
 		}
 
-		if (data) {
+		if (data != null) {
 			requestOptions.body = data;
 		}
 

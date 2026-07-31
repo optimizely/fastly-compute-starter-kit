@@ -59,7 +59,9 @@ const DEFAULT_DATAFILE_CACHE_TTL_SECONDS = 300; // 5 minutes
 let cachedDatafile = null;
 
 /**
- * Timestamp (ms since epoch) of the last successful datafile fetch.
+ * Timestamp (ms since epoch) of the last datafile fetch attempt: a successful
+ * fetch, or a failed refresh that fell back to the cached datafile. Used to
+ * gate refreshes to at most once per TTL window.
  * @type {number}
  */
 let lastDatafileUpdate = 0;
@@ -152,6 +154,9 @@ export async function getOptimizelyClient() {
 			lastDatafileUpdate = now;
 		} catch (error) {
 			if (cachedDatafile) {
+				// Record the attempt so a failing CDN is retried at most once per
+				// TTL window instead of on every request during an outage.
+				lastDatafileUpdate = now;
 				console.error(
 					"Failed to fetch fresh datafile, using cached version:",
 					error,
