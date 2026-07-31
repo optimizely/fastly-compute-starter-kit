@@ -1,0 +1,7 @@
+# Normalize line endings: store text as LF in the repo and check out as LF
+# everywhere so the kit produces clean diffs across macOS, Linux, and Windows.
+* text=auto eol=lf
+
+# Treat build output and archives as binary (defensive; these are gitignored).
+*.wasm binary
+*.tar.gz binary
