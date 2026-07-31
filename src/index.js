@@ -15,7 +15,7 @@
  */
 
 /// <reference types="@fastly/js-compute" />
-import { parse, serialize } from "cookie";
+import { parseCookie, stringifySetCookie } from "cookie";
 import { getOptimizelyClient } from "./optimizely_helper";
 
 /**
@@ -40,7 +40,7 @@ addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
  * @returns {Promise<Response>} HTTP response with a persistent user-ID cookie
  */
 async function handleRequest(event) {
-	const cookies = parse(event.request.headers.get("Cookie") || "");
+	const cookies = parseCookie(event.request.headers.get("Cookie") || "");
 
 	// Reuse the user ID from the cookie if present so a returning user in the
 	// same browser session always sees the same variation.
@@ -122,6 +122,9 @@ function logDecision(decision) {
 function buildResponse(body, userId) {
 	const headers = new Headers();
 	headers.set("Content-Type", "text/plain");
-	headers.set("Set-Cookie", serialize(OPTIMIZELY_USER_ID_COOKIE_NAME, userId));
+	headers.set(
+		"Set-Cookie",
+		stringifySetCookie({ name: OPTIMIZELY_USER_ID_COOKIE_NAME, value: userId }),
+	);
 	return new Response(body, { status: 200, headers });
 }

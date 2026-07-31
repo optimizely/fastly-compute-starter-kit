@@ -6,10 +6,10 @@ vi.mock("../src/optimizely_helper.js", () => ({
 	getOptimizelyClient: vi.fn(),
 }));
 
-// Mock the cookie module (named exports, as required under strict ESM)
+// Mock the cookie module (v2 named exports, as required under strict ESM)
 vi.mock("cookie", () => ({
-	parse: vi.fn(),
-	serialize: vi.fn(),
+	parseCookie: vi.fn(),
+	stringifySetCookie: vi.fn(),
 }));
 
 // Importing index.js above registered the fetch handler on the mocked
@@ -71,7 +71,9 @@ describe("index.js - Fastly Compute", () => {
 		};
 
 		getOptimizelyClient.mockResolvedValue(mockOptimizelyClient);
-		cookie.serialize.mockReturnValue("optimizely_user_id=test-uuid-123");
+		cookie.stringifySetCookie.mockReturnValue(
+			"optimizely_user_id=test-uuid-123",
+		);
 	});
 
 	afterEach(() => {
@@ -79,10 +81,10 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("generates a new user ID when no cookie is present", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		const response = await invoke(new Request("https://example.com"));
 
-		expect(cookie.parse).toHaveBeenCalledWith("");
+		expect(cookie.parseCookie).toHaveBeenCalledWith("");
 		expect(mockOptimizelyClient.createUserContext).toHaveBeenCalledWith(
 			"test-uuid-123",
 			{},
@@ -92,14 +94,16 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("reuses the user ID from an existing cookie", async () => {
-		cookie.parse.mockReturnValue({ optimizely_user_id: "existing-user-456" });
+		cookie.parseCookie.mockReturnValue({
+			optimizely_user_id: "existing-user-456",
+		});
 		const response = await invoke(
 			new Request("https://example.com", {
 				headers: { Cookie: "optimizely_user_id=existing-user-456" },
 			}),
 		);
 
-		expect(cookie.parse).toHaveBeenCalledWith(
+		expect(cookie.parseCookie).toHaveBeenCalledWith(
 			"optimizely_user_id=existing-user-456",
 		);
 		expect(mockOptimizelyClient.createUserContext).toHaveBeenCalledWith(
@@ -110,7 +114,7 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("decides a single flag and logs the result", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		await invoke(new Request("https://example.com"));
 
 		expect(mockUserContext.decide).toHaveBeenCalledWith("YOUR_FLAG_HERE");
@@ -121,7 +125,7 @@ describe("index.js - Fastly Compute", () => {
 
 	it("logs a disabled flag decision", async () => {
 		mockDecision.enabled = false;
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		await invoke(new Request("https://example.com"));
 
 		expect(global.console.info).toHaveBeenCalledWith(
@@ -130,7 +134,7 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("decides all flags and logs each result", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		await invoke(new Request("https://example.com"));
 
 		expect(mockUserContext.decideAll).toHaveBeenCalled();
@@ -143,21 +147,21 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("sets the Content-Type and Set-Cookie headers", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		const response = await invoke(new Request("https://example.com"));
 
 		expect(response.headers.get("Content-Type")).toBe("text/plain");
-		expect(cookie.serialize).toHaveBeenCalledWith(
-			"optimizely_user_id",
-			"test-uuid-123",
-		);
+		expect(cookie.stringifySetCookie).toHaveBeenCalledWith({
+			name: "optimizely_user_id",
+			value: "test-uuid-123",
+		});
 		expect(response.headers.get("Set-Cookie")).toBe(
 			"optimizely_user_id=test-uuid-123",
 		);
 	});
 
 	it("returns the expected response body", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		const response = await invoke(new Request("https://example.com"));
 		const text = await response.text();
 
@@ -167,7 +171,7 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("degrades gracefully when the client fails to initialize", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		getOptimizelyClient.mockRejectedValue(new Error("SDK key missing"));
 
 		const response = await invoke(new Request("https://example.com"));
@@ -181,7 +185,7 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("degrades gracefully when a single decision throws", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		mockUserContext.decide.mockImplementation(() => {
 			throw new Error("Decision error");
 		});
@@ -195,7 +199,7 @@ describe("index.js - Fastly Compute", () => {
 	});
 
 	it("degrades gracefully when decideAll throws", async () => {
-		cookie.parse.mockReturnValue({});
+		cookie.parseCookie.mockReturnValue({});
 		mockUserContext.decideAll.mockImplementation(() => {
 			throw new Error("DecideAll error");
 		});
