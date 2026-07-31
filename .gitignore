@@ -1,4 +1,6 @@
-node_modules
-bin
-pkg
-dist
+node_modules/
+bin/
+pkg/
+dist/
+docs/
+CLAUDE.md
