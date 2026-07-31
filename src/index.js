@@ -105,6 +105,14 @@ async function handleRequest(event) {
 		console.error("Failed to decide for all flags, continuing:", error);
 	}
 
+	// Track a conversion event
+	try {
+		optimizelyUserContext.trackEvent("YOUR_EVENT_HERE");
+		console.info('Tracked event "YOUR_EVENT_HERE"');
+	} catch (error) {
+		console.error("Failed to track event, continuing:", error);
+	}
+
 	return buildResponse(
 		'Welcome to the Optimizely Starter Kit. Check "fastly log-tail" for decision results.',
 		userId,
