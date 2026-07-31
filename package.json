@@ -1,36 +1,36 @@
 {
-  "name": "optimizely-starter-kit-for-fastly-compute",
-  "version": "1.0.0",
-  "description": "This is an optimizely starter kit for fastly edge workers",
-  "main": "src/index.js",
-  "type": "module",
-  "private": true,
-  "license": "Apache-2.0",
-  "scripts": {
-    "build": "js-compute-runtime src/index.js bin/main.wasm",
-    "serve": "fastly compute serve",
-    "deploy": "fastly compute deploy",
-    "format": "biome format --write",
-    "lint": "biome check --write",
-    "test": "vitest run",
-    "precommit": "npm run lint && npm run format && npm run test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/optimizely/fastly-compute-starter-kit.git"
-  },
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/optimizely/fastly-compute-starter-kit/issues"
-  },
-  "homepage": "https://github.com/optimizely/fastly-compute-starter-kit#readme",
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.4",
-    "@fastly/js-compute": "^3.44.2",
-    "vitest": "^3.2.4"
-  },
-  "dependencies": {
-    "@optimizely/optimizely-sdk": "^6.5.0",
-    "cookie": "^1.0.2"
-  }
+	"name": "optimizely-starter-kit-for-fastly-compute",
+	"version": "1.0.0",
+	"description": "This is an optimizely starter kit for fastly edge workers",
+	"main": "src/index.js",
+	"type": "module",
+	"private": true,
+	"license": "Apache-2.0",
+	"scripts": {
+		"build": "js-compute-runtime src/index.js bin/main.wasm",
+		"serve": "fastly compute serve",
+		"deploy": "fastly compute deploy",
+		"format": "biome format --write",
+		"lint": "biome check --write",
+		"test": "vitest run",
+		"precommit": "npm run lint && npm run format && npm run test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/optimizely/fastly-compute-starter-kit.git"
+	},
+	"author": "",
+	"bugs": {
+		"url": "https://github.com/optimizely/fastly-compute-starter-kit/issues"
+	},
+	"homepage": "https://github.com/optimizely/fastly-compute-starter-kit#readme",
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.6",
+		"@fastly/js-compute": "^3.44.2",
+		"vitest": "^3.2.4"
+	},
+	"dependencies": {
+		"@optimizely/optimizely-sdk": "^6.5.0",
+		"cookie": "^1.0.2"
+	}
 }

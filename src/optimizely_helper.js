@@ -144,8 +144,7 @@ export async function getOptimizelyClient() {
 	const { sdkKey, datafileTtlSeconds } = getConfig();
 
 	const now = Date.now();
-	const isDatafileStale =
-		now - lastDatafileUpdate > datafileTtlSeconds * 1000;
+	const isDatafileStale = now - lastDatafileUpdate > datafileTtlSeconds * 1000;
 
 	if (!cachedDatafile || isDatafileStale) {
 		try {
@@ -162,9 +161,7 @@ export async function getOptimizelyClient() {
 					"Failed to fetch datafile and no cached version available:",
 					error,
 				);
-				throw new Error(
-					`Unable to initialize Optimizely: ${error.message}`,
-				);
+				throw new Error(`Unable to initialize Optimizely: ${error.message}`);
 			}
 		}
 	}

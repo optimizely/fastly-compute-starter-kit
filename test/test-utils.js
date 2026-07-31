@@ -21,7 +21,8 @@ export function mockFetchResponse(body, options = {}) {
 		status,
 		ok: status >= 200 && status < 300,
 		headers: {
-			get: (k) => (k.toLowerCase() === "content-type" ? contentType : undefined),
+			get: (k) =>
+				k.toLowerCase() === "content-type" ? contentType : undefined,
 			entries: () => [["content-type", contentType]],
 		},
 		text: vi.fn().mockResolvedValue(body),

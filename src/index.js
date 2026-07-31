@@ -44,8 +44,7 @@ async function handleRequest(event) {
 
 	// Reuse the user ID from the cookie if present so a returning user in the
 	// same browser session always sees the same variation.
-	const userId =
-		cookies[OPTIMIZELY_USER_ID_COOKIE_NAME] || crypto.randomUUID();
+	const userId = cookies[OPTIMIZELY_USER_ID_COOKIE_NAME] || crypto.randomUUID();
 
 	let optimizelyClient;
 	try {
@@ -123,9 +122,6 @@ function logDecision(decision) {
 function buildResponse(body, userId) {
 	const headers = new Headers();
 	headers.set("Content-Type", "text/plain");
-	headers.set(
-		"Set-Cookie",
-		serialize(OPTIMIZELY_USER_ID_COOKIE_NAME, userId),
-	);
+	headers.set("Set-Cookie", serialize(OPTIMIZELY_USER_ID_COOKIE_NAME, userId));
 	return new Response(body, { status: 200, headers });
 }

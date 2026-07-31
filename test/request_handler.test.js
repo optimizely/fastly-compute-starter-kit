@@ -55,7 +55,11 @@ describe("FastlyRequestHandler", () => {
 
 		const cacheOverride = new CacheOverride("override", { ttl: 60, swr: 60 });
 		const rh = new FastlyRequestHandler("optlycdn", cacheOverride);
-		const { responsePromise } = rh.makeRequest("https://example.test", {}, "GET");
+		const { responsePromise } = rh.makeRequest(
+			"https://example.test",
+			{},
+			"GET",
+		);
 
 		await responsePromise;
 		expect(receivedInit.cacheOverride).toBe(cacheOverride);
@@ -73,7 +77,11 @@ describe("FastlyRequestHandler", () => {
 		);
 
 		const rh = new FastlyRequestHandler("optlylogx");
-		const { responsePromise } = rh.makeRequest("https://example.test", {}, "GET");
+		const { responsePromise } = rh.makeRequest(
+			"https://example.test",
+			{},
+			"GET",
+		);
 
 		const res = await responsePromise;
 		expect(res.statusCode).toBe(201);
