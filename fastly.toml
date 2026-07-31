@@ -7,6 +7,9 @@ language = "javascript"
 manifest_version = 2
 name = "Optimizely Feature Experimentation, Optimizely Full Stack (legacy), and Optimizely Rollouts"
 
+[scripts]
+  build = "npm run build"
+
 [setup.backends]
 
   [setup.backends.optlycdn]
