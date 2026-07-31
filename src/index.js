@@ -25,7 +25,14 @@ import { getOptimizelyClient } from "./optimizely_helper";
  */
 const OPTIMIZELY_USER_ID_COOKIE_NAME = "optimizely_user_id";
 
-addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
+addEventListener("fetch", (event) => {
+	// waitUntil's first call must be made synchronously inside the fetch callback,
+	// before any await. Event dispatches register later from deep in an async stack
+	// (inside decide), so this synchronous prime is required to enable them.
+	// https://js-compute-reference-docs.edgecompute.app/docs/globals/FetchEvent/prototype/waitUntil
+	event.waitUntil(Promise.resolve());
+	event.respondWith(handleRequest(event));
+});
 
 /**
  * Handle an incoming HTTP request and perform Optimizely feature flag decisions.
@@ -48,7 +55,9 @@ async function handleRequest(event) {
 
 	let optimizelyClient;
 	try {
-		optimizelyClient = await getOptimizelyClient();
+		// Pass event.waitUntil so fire-and-forget event dispatches stay alive past
+		// respondWith and reach the Optimizely logx backend.
+		optimizelyClient = await getOptimizelyClient((p) => event.waitUntil(p));
 	} catch (error) {
 		console.error(
 			"Failed to initialize Optimizely client, continuing without feature flags:",

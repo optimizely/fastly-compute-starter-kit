@@ -106,6 +106,69 @@ describe("FastlyRequestHandler", () => {
 		await expect(responsePromise).rejects.toMatchObject({ name: "AbortError" });
 	});
 
+	it("registers each request with the keepAlive registrar when provided", async () => {
+		global.fetch = vi.fn(() =>
+			Promise.resolve({
+				status: 200,
+				headers: { entries: () => [] },
+				text: async () => "ok",
+			}),
+		);
+
+		const keepAlive = vi.fn();
+		const rh = new FastlyRequestHandler("optlylogx", undefined, keepAlive);
+		const { responsePromise } = rh.makeRequest(
+			"https://example.test/event",
+			{},
+			"POST",
+			'{"a":1}',
+		);
+
+		await responsePromise;
+		expect(keepAlive).toHaveBeenCalledTimes(1);
+		// The registered promise must resolve so waitUntil settles normally.
+		await expect(keepAlive.mock.calls[0][0]).resolves.toMatchObject({
+			statusCode: 200,
+		});
+	});
+
+	it("registers a non-rejecting promise even when the fetch fails", async () => {
+		global.fetch = vi.fn(() => Promise.reject(new Error("network down")));
+
+		const keepAlive = vi.fn();
+		const rh = new FastlyRequestHandler("optlylogx", undefined, keepAlive);
+		const { responsePromise } = rh.makeRequest(
+			"https://example.test/event",
+			{},
+			"POST",
+		);
+
+		await expect(responsePromise).rejects.toThrow("network down");
+		expect(keepAlive).toHaveBeenCalledTimes(1);
+		// waitUntil must never receive a rejecting promise.
+		await expect(keepAlive.mock.calls[0][0]).resolves.toBeUndefined();
+	});
+
+	it("does not register with a keepAlive when none is provided", async () => {
+		global.fetch = vi.fn(() =>
+			Promise.resolve({
+				status: 200,
+				headers: { entries: () => [] },
+				text: async () => "ok",
+			}),
+		);
+
+		const rh = new FastlyRequestHandler("optlylogx");
+		const { responsePromise } = rh.makeRequest(
+			"https://example.test/event",
+			{},
+			"GET",
+		);
+
+		// No keepAlive wired: nothing to assert beyond a clean resolution.
+		await expect(responsePromise).resolves.toMatchObject({ statusCode: 200 });
+	});
+
 	it("sends the body for a POST request", async () => {
 		let receivedInit;
 		global.fetch = vi.fn((url, init) => {

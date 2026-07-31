@@ -138,11 +138,15 @@ export async function getDatafile(sdkKey, ttl) {
  * - A fresh client is created per request and wired for edge use:
  *   static project config manager (no polling) + forwarding event processor.
  *
+ * @param {(p: Promise<unknown>) => void} [keepAlive] - Optional keep-alive registrar
+ *   (e.g. `event.waitUntil`). Threaded to the event request handler only, so
+ *   fire-and-forget event dispatches survive past the client response. The datafile
+ *   handler does not need it — it is awaited during initialization.
  * @returns {Promise<Object>} Configured Optimizely client instance
  * @throws {Error} If configuration is missing or the initial datafile fetch fails
  * @see https://docs.developers.optimizely.com/feature-experimentation/docs/initialize-the-javascript-sdk
  */
-export async function getOptimizelyClient() {
+export async function getOptimizelyClient(keepAlive) {
 	const { sdkKey, datafileTtlSeconds } = getConfig();
 
 	const now = Date.now();
@@ -175,8 +179,14 @@ export async function getOptimizelyClient() {
 		datafile: cachedDatafile,
 	});
 
-	// Events are dispatched to the Optimizely logx backend.
-	const eventRequestHandler = new FastlyRequestHandler(BACKEND_LOGX);
+	// Events are dispatched to the Optimizely logx backend fire-and-forget, so the
+	// keep-alive registrar is threaded here to keep those deliveries alive past the
+	// client response.
+	const eventRequestHandler = new FastlyRequestHandler(
+		BACKEND_LOGX,
+		undefined,
+		keepAlive,
+	);
 	const eventDispatcher = createEventDispatcher(eventRequestHandler);
 	const eventProcessor = createForwardingEventProcessor(eventDispatcher);
 

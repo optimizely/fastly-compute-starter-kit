@@ -29,10 +29,15 @@ export class FastlyRequestHandler {
 	/**
 	 * @param {string} backend - Name of the Fastly backend to route requests to (must exist in fastly.toml).
 	 * @param {CacheOverride} [cacheOverride] - Optional Fastly CacheOverride applied to the request.
+	 * @param {(p: Promise<unknown>) => void} [keepAlive] - Optional keep-alive registrar
+	 *        (e.g. `event.waitUntil`). Each outbound request is registered with it so
+	 *        fire-and-forget deliveries (Optimizely event dispatches) survive past
+	 *        `respondWith` instead of being cut off when the response is returned.
 	 */
-	constructor(backend, cacheOverride) {
+	constructor(backend, cacheOverride, keepAlive) {
 		this.backend = backend;
 		this.cacheOverride = cacheOverride;
+		this.keepAlive = keepAlive;
 	}
 
 	/**
@@ -91,6 +96,14 @@ export class FastlyRequestHandler {
 				}
 				throw error;
 			});
+
+		// Keep the request alive even after the client response is returned. This
+		// matters for fire-and-forget event dispatches, whose fetch would otherwise
+		// be cut off when respondWith resolves. Swallow rejections so the keep-alive
+		// registrar (event.waitUntil) never receives a rejecting promise.
+		if (this.keepAlive) {
+			this.keepAlive(responsePromise.catch(() => {}));
+		}
 
 		return {
 			responsePromise,

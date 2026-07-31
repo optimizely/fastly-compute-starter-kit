@@ -21,17 +21,28 @@ const fetchListener = globalThis.addEventListener.mock.calls.find(
 /**
  * Invoke the registered fetch handler with a mock FetchEvent.
  * @param {Request} request
- * @returns {Promise<Response>}
+ * @returns {{response: Promise<Response>, event: {waitUntil: import("vitest").Mock}}}
  */
-function invoke(request) {
+function invokeWithEvent(request) {
 	let captured;
-	fetchListener({
+	const event = {
 		request,
+		waitUntil: vi.fn(),
 		respondWith: (promise) => {
 			captured = promise;
 		},
-	});
-	return captured;
+	};
+	fetchListener(event);
+	return { response: captured, event };
+}
+
+/**
+ * Invoke the registered fetch handler and return only the response promise.
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+function invoke(request) {
+	return invokeWithEvent(request).response;
 }
 
 describe("index.js - Fastly Compute", () => {
@@ -169,6 +180,32 @@ describe("index.js - Fastly Compute", () => {
 		expect(text).toBe(
 			'Welcome to the Optimizely Starter Kit. Check "fastly log-tail" for decision results.',
 		);
+	});
+
+	it("primes waitUntil synchronously inside the fetch callback", () => {
+		cookie.parseCookie.mockReturnValue({});
+		const { event } = invokeWithEvent(new Request("https://example.com"));
+
+		// Must be called synchronously, before any await, so later event dispatches
+		// can register keep-alive promises.
+		expect(event.waitUntil).toHaveBeenCalledTimes(1);
+		expect(event.waitUntil.mock.calls[0][0]).toBeInstanceOf(Promise);
+	});
+
+	it("passes a keepAlive registrar to getOptimizelyClient", async () => {
+		cookie.parseCookie.mockReturnValue({});
+		const { response, event } = invokeWithEvent(
+			new Request("https://example.com"),
+		);
+		await response;
+
+		expect(getOptimizelyClient).toHaveBeenCalledWith(expect.any(Function));
+
+		// The registrar must route through event.waitUntil.
+		const registrar = getOptimizelyClient.mock.calls[0][0];
+		const promise = Promise.resolve();
+		registrar(promise);
+		expect(event.waitUntil).toHaveBeenCalledWith(promise);
 	});
 
 	it("degrades gracefully when the client fails to initialize", async () => {

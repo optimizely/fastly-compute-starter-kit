@@ -138,6 +138,24 @@ describe("Optimizely Helper", () => {
 			expect(client).toBe(mockClient);
 		});
 
+		it("threads keepAlive to the event request handler", async () => {
+			const keepAlive = vi.fn();
+			await getOptimizelyClient(keepAlive);
+
+			const { requestHandler } = mockCreateInstance.mock.calls[0][0];
+			expect(requestHandler.keepAlive).toBe(keepAlive);
+			expect(requestHandler.backend).toBe("optlylogx");
+		});
+
+		it("leaves the datafile handler without a keepAlive", async () => {
+			const keepAlive = vi.fn();
+			await getOptimizelyClient(keepAlive);
+
+			// The datafile fetch completes during init, so keepAlive must not be
+			// invoked for it — only fire-and-forget event dispatches use it.
+			expect(keepAlive).not.toHaveBeenCalled();
+		});
+
 		it("does not re-fetch the datafile within the TTL", async () => {
 			await getOptimizelyClient();
 
