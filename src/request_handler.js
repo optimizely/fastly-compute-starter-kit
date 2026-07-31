@@ -44,16 +44,23 @@ export class FastlyRequestHandler {
 	 * @returns {{responsePromise: Promise<{statusCode:number,body:string,headers:Object}>, abort: ()=>void}}
 	 */
 	makeRequest(requestUrl, headers, method, data) {
-		const controller = new AbortController();
 		method = (method || "GET").toUpperCase();
 		headers = new Headers(headers || {});
+
+		// AbortController is not available in the Fastly Compute runtime, so only
+		// wire up cancellation when the runtime provides it (e.g. under Node tests).
+		const controller =
+			typeof AbortController !== "undefined" ? new AbortController() : null;
 
 		const requestOptions = {
 			method,
 			headers,
 			backend: this.backend,
-			signal: controller.signal,
 		};
+
+		if (controller) {
+			requestOptions.signal = controller.signal;
+		}
 
 		if (this.cacheOverride) {
 			requestOptions.cacheOverride = this.cacheOverride;
@@ -88,7 +95,9 @@ export class FastlyRequestHandler {
 		return {
 			responsePromise,
 			abort: () => {
-				controller.abort();
+				if (controller) {
+					controller.abort();
+				}
 			},
 		};
 	}
