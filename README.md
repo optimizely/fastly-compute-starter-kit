@@ -2,85 +2,247 @@
 
 This repository houses the Fastly Compute@Edge Starter Kit which provides a quickstart for users who would like to use Optimizely Feature Experimentation and Optimizely Full Stack (legacy) with Fastly Compute@Edge.
 
-Optimizely Feature Experimentation is an A/B testing and feature management tool for product development teams that enables you to experiment at every step. Using Optimizely Feature Experimentation allows for every feature on your roadmap to be an opportunity to discover hidden insights. Learn more at [Optimizely.com](https://www.optimizely.com/products/experiment/feature-experimentation/), or see the [developer documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/welcome).
+Optimizely Feature Experimentation is an A/B testing and feature management tool for product development teams that enables you to experiment at every step. Using Optimizely Feature Experimentation allows for every feature on your roadmap to be an opportunity to discover hidden insights. Learn more at [Optimizely.com](https://www.optimizely.com/products/experiment/feature-experimentation/), or see the [developer documentation](https://docs.developers.optimizely.com/feature-experimentation/docs/welcome).
 
 Optimizely Rollouts is [free feature flags](https://www.optimizely.com/free-feature-flagging/) for development teams. You can easily roll out and roll back features in any application without code deploys, mitigating risk for every feature on your roadmap.
 
+## Quick Start
+
+Get up and running in a few minutes:
+
+```bash
+# 1. Initialize a project from this template using the Fastly CLI
+#    (replace vX.Y.Z with the latest release tag from
+#    https://github.com/optimizely/fastly-compute-starter-kit/releases)
+fastly compute init --from https://github.com/optimizely/fastly-compute-starter-kit
+cd my-project
+
+# 2. Install dependencies
+npm install
+
+# 3. Set your Optimizely SDK key (get it from Settings > Environments in
+#    your Optimizely dashboard). For local development, edit the sdk_key
+#    value under [local_server.config_stores.optimizely.contents] in fastly.toml.
+
+# 4. Start the local development server
+npm run serve
+
+# 5. Visit the printed local URL (default http://127.0.0.1:7676) to see it in action.
+```
+
+For detailed setup instructions, see the [Get Started](#get-started) section below.
+
+## Features
+
+- **Optimizely SDK v6**: Latest version of the Optimizely JavaScript SDK (Universal build).
+- **Modern js-compute toolchain**: Builds directly to WebAssembly with `@fastly/js-compute` 3.x, no bundler required.
+- **Fastly edge datafile caching**: Datafile fetched through a Fastly backend and cached with `CacheOverride` (stale-while-revalidate).
+- **Externalized configuration**: SDK key and cache TTL read from a Fastly Config Store, not hardcoded.
+- **Graceful degradation**: The service still returns a response even if Optimizely initialization fails.
+- **Cookie-based user persistence**: Automatic user ID generation with `crypto.randomUUID()` and cookie persistence for sticky bucketing.
+- **Development tools**: Biome for linting/formatting and Vitest for unit tests.
+
 ## Get Started
 
-Refer to the [Optimizely Fastly Compute@Edge Starter Kit documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly-compute-at-edge) for detailed instructions about using this starter kit.
+Refer to the [Optimizely Fastly Compute@Edge Starter Kit documentation](https://docs.developers.optimizely.com/feature-experimentation/docs/fastly-compute-at-edge) for detailed instructions about using this starter kit.
 
 ### Prerequisites
 
-1. You will need an **Optimizely Account**. If you do not have an account, you can [register for a free account](https://www.optimizely.com/products/intelligence/full-stack-experimentation/).
+**System Requirements:**
+- Node.js 18.x or higher (20.x or 22.x recommended)
+- npm 9.x or higher
 
-2. You will need a **Fastly Compute@Edge** account and the Fastly CLI installed. For more information view the Compute@Edge getting started [documentation](https://developer.fastly.com/learning/compute/).
+**Accounts & Tools:**
 
-### Requirements
+1. **Optimizely Account**: If you don't have an account, [register for a free account](https://www.optimizely.com/products/feature-experimentation/).
 
-You must first have an Fastly Compute@Edge service set up. To do so, you may take the following steps:
+2. **Fastly Compute account**: Sign up for [Fastly](https://www.fastly.com/signup/) and enable Compute.
 
+3. **Fastly CLI**: Install it by following the [Fastly CLI installation guide](https://www.fastly.com/documentation/reference/tools/cli/). The CLI bundles the local test runtime (Viceroy) used by `fastly compute serve`.
 
 ### Install the Starter Kit
 
-After you succesfully have an Fastly Compute@Edge service set up, you can clone this starter kit, edit it, build it, and upload the build to your EdgeWorker.
+1. Initialize a project from this template using the [Fastly CLI](https://www.fastly.com/documentation/reference/tools/cli/).
 
+   ```bash
+   fastly compute init --from https://github.com/optimizely/fastly-compute-starter-kit
+   cd my-project
+   ```
 
-1. Create a new folder and initialize a Fastly Compute@Edge service using the [Fastly CLI](https://developer.fastly.com/reference/cli/) from this template.
-    ```sh
-    fastly compute init --from https://github.com/optimizely/fastly-compute-starter-kit
-    ```
+   Follow the wizard and provide the service name, description, and any other requested information.
 
-2. Follow the wizard and provide the service name, description and any other information.
-   a) Add your `service_id` to `fastly.toml`, if you want to use an existing Fastly service.
+2. Install node packages.
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure your Optimizely SDK Key**.
+
+   First, get your SDK key from the Optimizely dashboard:
+   - Log into your [Optimizely account](https://app.optimizely.com/)
+   - Navigate to **Settings > Environments**
+   - Copy your SDK key from the desired environment (it looks like: `AbCdEf12345GhIjKlMnOp`)
+
+   Then set it using one of these methods:
+
+   **Option A: Local development (fastly.toml)**
+
+   Edit the `optimizely` Config Store contents in `fastly.toml` and replace `YOUR_SDK_KEY_HERE`:
+
+   ```toml
+   [local_server.config_stores]
+     [local_server.config_stores.optimizely]
+       format = "inline-toml"
+       [local_server.config_stores.optimizely.contents]
+         sdk_key = "YOUR_SDK_KEY_HERE"
+         datafile_ttl_seconds = "300"
+   ```
+
+   **Option B: Deployed service (Config Store)**
+
+   The `[setup.config_stores]` block in `fastly.toml` provisions the `optimizely` Config Store the first time you run `fastly compute publish`; the CLI prompts you for the `sdk_key` value. You can also manage the entry directly with the CLI:
+
+   ```bash
+   fastly config-store-entry update --store-id <id> --key sdk_key --value <your_sdk_key>
+   ```
+
+## Project Structure
+
+```
+├── src/
+│   ├── index.js                    # Main entry point (fetch event handler)
+│   ├── optimizely_helper.js        # Optimizely SDK integration + datafile caching
+│   └── request_handler.js          # Fastly-specific SDK request handler
+├── test/
+│   ├── index.test.js               # Tests for the entry handler
+│   ├── optimizely_helper.test.js   # Tests for the Optimizely helper
+│   ├── request_handler.test.js     # Tests for the request handler
+│   ├── setup.js                    # Test environment setup (Fastly global mocks)
+│   ├── test-utils.js               # Shared test utilities and mocks
+│   └── mocks/                      # Mocks for Fastly runtime modules
+├── biome.jsonc                     # Biome configuration for linting/formatting
+├── fastly.toml                     # Fastly Compute service configuration
+├── package.json                    # Node.js dependencies and scripts
+└── vitest.config.js                # Vitest testing framework configuration
+```
 
 ## Use the Fastly Compute@Edge Starter Kit
 
-The Optimizely starter kit for Fastly's Compute@Edge service embeds and extends our [Javascript (Node) SDK](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/javascript-node-sdk). For a guide to getting started with our platform more generally, you can reference our [Javascript (Node) Quickstart developer documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/javascript-node-quickstart).
+The Optimizely starter kit for Fastly Compute embeds and extends our [Javascript SDK](https://docs.developers.optimizely.com/feature-experimentation/docs/javascript-sdk). For a guide to getting started with our platform more generally, you can reference our [Javascript Quickstart developer documentation](https://docs.developers.optimizely.com/feature-experimentation/docs/javascript-sdk-quickstart).
 
-> Note: This starter kit in particular makes use of the "Lite" version of our Javascript SDK for Node.js which explicitly excludes the datafile manager and event processor features for better performance. As a result, it is expected that you will provide the datafile manually to the Optimizely SDK either through a local file reference or by using the provided platform-specific `getDatafile()` helper to load in your Optimizely project's datafile.
+> Note: This starter kit uses the "Universal" build of our JavaScript SDK, which excludes the polling datafile manager and batch event processor for better edge performance. The datafile is fetched from Optimizely's CDN and cached at the Fastly edge via `CacheOverride`, and events are dispatched through a Fastly backend using the platform-specific request handler in `src/request_handler.js`.
+
+### Development
+
+This template includes modern development tools:
+
+- **Biome**: Fast formatter and linter for JavaScript
+- **Vitest**: Fast unit testing framework
+- **Fastly CLI + Viceroy**: Local development server that simulates Fastly Compute
+
+Available commands:
+
+```bash
+npm run serve        # Build and serve locally with the Fastly CLI (Viceroy)
+npm run build        # Compile src/index.js to a WebAssembly module (bin/main.wasm)
+npm run deploy       # Build and deploy to Fastly
+npm run format       # Format code with Biome
+npm run lint         # Lint and auto-fix code with Biome
+npm run test         # Run unit tests with Vitest
+```
 
 ### Initialization
 
-Sample code is included in `src/index.js` that shows examples of initializing and using the Optimizely JavaScript (Node) SDK interface for performing common functions such as creating user context, adding a notification listener, and making a decision based on the created user context.
+Sample code is included in `src/index.js` that shows examples of initializing and using the Optimizely JavaScript SDK for common functions such as creating a user context and making decisions.
 
-Additional platform-specific code is included in `src/optimizely_helper.js` which provide workarounds for otherwise common features of the Optimizely SDK.
+Additional platform-specific code is included in `src/optimizely_helper.js` and `src/request_handler.js`, which provide:
+
+- **Datafile Caching**: Fetching and caching the Optimizely datafile through a Fastly backend with `CacheOverride`.
+- **Client Management**: Per-request client creation with module-scope datafile reuse and stale fallback.
+- **Event Dispatching**: Event forwarding to Optimizely's logging backend.
+
+To customize:
+
+1. **Configure your feature flags**: Update the `YOUR_FLAG_HERE` placeholder in `src/index.js` with your actual flag key from the Optimizely dashboard.
+
+2. Test and debug locally.
+
+   ```bash
+   npm run serve
+   ```
 
 ### Publishing
 
-1. Update your Optimizely `sdkKey` and `flagKey` in `src/index.js`. Your SDK keys can be found in the Optimizely application under **Settings**.
+1. Build and publish to Fastly.
 
-2. Build and publish:
-    ```sh
-    fastly compute publish
-    ```
-    
-3. Monitor logs:
-    ```sh
-    fastly log-tail
-    ```
+   ```bash
+   fastly compute publish
+   ```
+
+2. Monitor logs for decision results.
+
+   ```bash
+   fastly log-tail
+   ```
 
 ## Additional Resources and Concepts
 
+### Caching with Fastly
+
+This template caches the [Optimizely Datafile](https://docs.developers.optimizely.com/feature-experimentation/docs/manage-config-datafile) at the Fastly edge using `CacheOverride`. The datafile is fetched from Optimizely's CDN through the `optlycdn` backend and cached for 5 minutes by default.
+
+**Cache Configuration:**
+- **Default TTL**: 5 minutes (300 seconds)
+- **Configurable via**: the `datafile_ttl_seconds` key in the `optimizely` Config Store
+- **Example values**: `300` (5 minutes), `600` (10 minutes), `1800` (30 minutes)
+- **Behavior**: A stale-while-revalidate window and a module-scope fallback keep the last known datafile in use if a refresh fetch fails.
+
 ### Identity Management
 
-Out of the box, Optimizely's Feature Experimentation SDKs require a user-provided identifier to be passed in at runtime to drive experiment and feature flag decisions. This example generates a unique ID, stores it in a cookie and reuses it to make the decisions sticky. Alternatively, you can use an existing unique identifier available within your application and pass it in as the value for the `OPTIMIZELY_USER_ID` cookie.
+Out of the box, Optimizely's Feature Experimentation SDKs require a user-provided identifier at runtime to drive experiment and feature flag decisions. This example generates a unique ID using `crypto.randomUUID()`, stores it in a cookie, and reuses it to make decisions sticky. Alternatively, you can use an existing unique identifier from your application and pass it in as the value for the `optimizely_user_id` cookie.
 
 ### Bucketing
 
-For more information on how Optimizely Feature Experimentation SDKs assign users to feature flags and experiments, see [the documentation on how bucketing works](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/how-bucketing-works). 
+For more information on how Optimizely Feature Experimentation SDKs assign users to feature flags and experiments, see [the documentation on how bucketing works](https://docs.developers.optimizely.com/feature-experimentation/docs/how-bucketing-works-feature-experimentation).
 
 ### External Calls via Fastly Backends
 
-This starter kit overrides the standard Optimizely Javascript SDK's external calls to use Compute@Edge's fetch against registered backend endpoints. This backend setup also provides performant caching for the [Optimizely Datafile](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/manage-config-datafile). 
+This starter kit routes the Optimizely SDK's external calls through Fastly Compute's `fetch` against registered backends declared in `fastly.toml` (`optlycdn` for the datafile CDN and `optlylogx` for event logging). Backends must be named in `fastly.toml` and referenced by name in each request.
 
 ### Fastly Compute@Edge
 
-For more information about Fastly Compute@Edge, you may visit the following resources:
+For more information about Fastly Compute, you may visit the following resources:
 
-- [Fastly - Compute@Edge official documentation](https://docs.fastly.com/products/compute-at-edge)
-- [Compute@Edge application code in JavaScript](https://docs.fastly.com/products/compute-at-edge)
-- [Fastly Compute@Edge with Optimizely documentation](https://docs.developers.optimizely.com/experimentation/v4.0.0-full-stack/docs/fastly-compute-at-edge)
+- [Fastly Compute documentation](https://www.fastly.com/documentation/guides/compute/)
+- [JavaScript on Fastly Compute](https://www.fastly.com/documentation/guides/compute/javascript/)
+- [Fastly Compute@Edge with Optimizely documentation](https://docs.developers.optimizely.com/feature-experimentation/docs/fastly-compute-at-edge)
+
+## Troubleshooting
+
+### Config Store "optimizely" not found
+
+Ensure the `optimizely` Config Store exists. For local development, confirm the `[local_server.config_stores.optimizely]` block is present in `fastly.toml`. For a deployed service, run `fastly compute publish` so the `[setup.config_stores]` block provisions it.
+
+### "sdk_key" is not set
+
+Set the `sdk_key` value in the `optimizely` Config Store (see step 3 of [Install the Starter Kit](#install-the-starter-kit)). Confirm it matches an active Optimizely project environment.
+
+### Datafile request failed
+
+This usually means the SDK key is incorrect, does not match an active project, or the Optimizely CDN is temporarily unavailable. When a cached datafile is available it continues to be used (stale fallback).
+
+### Feature flags not working as expected
+
+- Verify your flag key matches exactly (case-sensitive).
+- Check that the flag is enabled in your Optimizely project.
+- Ensure the environment SDK key matches the environment where the flag is configured.
+- Run `fastly log-tail` to inspect decision output.
+
+**Need more help?**
+- Check the [Optimizely Developer Docs](https://docs.developers.optimizely.com/feature-experimentation/docs/fastly-compute-at-edge)
+- Visit the [Optimizely Community](https://community.optimizely.com/)
+- Open an issue on [GitHub](https://github.com/optimizely/fastly-compute-starter-kit/issues)
 
 ## SDK Development
 
